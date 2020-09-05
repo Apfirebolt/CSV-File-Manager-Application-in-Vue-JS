@@ -1,0 +1,47 @@
+<script>
+  import VueCharts from 'vue-chartjs';
+  import { Bar } from 'vue-chartjs'
+  import moment from 'moment';
+  export default {
+    extends: Bar,
+    props: {
+      date_data: {
+        required: true,
+        type: Array
+      },
+      page_data: {
+        required: true,
+        type: Array
+      },
+      session_data: {
+        required: true,
+        type: Array
+      }
+    },
+    mounted () {
+      // Overwriting base render method with actual data.
+      this.renderChart({
+        labels: this.date_data.map((item, index) => {
+          return moment(item).format("YYYY-MM-DD");
+        }),
+        datasets: [
+          {
+            label: 'Page Data',
+            backgroundColor: '#f87979',
+            data: this.page_data
+          },
+          {
+            label: 'Session Data',
+            backgroundColor: '#ACACDA',
+            data: this.session_data
+          }
+        ]
+      })
+    }
+  }
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+
+</style>

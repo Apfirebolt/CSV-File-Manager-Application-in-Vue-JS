@@ -1,0 +1,28 @@
+/* Media Query Mixins */
+@mixin verySmallScreens {
+  @media only screen and (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin smallScreens {
+  @media only screen and (min-device-width : 481px) and (max-device-width : 767px) {
+    @content;
+  }
+}
+
+@mixin tabScreens {
+  @media only screen and (min-device-width : 768px) and (max-device-width : 1100px) {
+    @content;
+  }
+}
+
+@mixin largeScreens {
+  @media only screen and (min-width: 1100px) {
+    @content;
+  }
+}
+
+/* Variables */
+$primaryColor: #A549D5;
+$darkColor: #341E40;
