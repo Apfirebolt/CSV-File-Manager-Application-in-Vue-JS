@@ -4,11 +4,16 @@
            <p>
                {{ document_description }}
            </p>
+           <div v-if="aboutToDelete" class="confirm_delete container">
+               Are You sure you want to delete this CSV file ?
+               <button class="red btn button white-text" @click="delete_helper">Yes, Delete It</button>
+               <button class="orange btn button white-text" @click="aboutToDelete = false">Nope!</button>
+           </div>
            <div class="container">
-               <button class="btn button green lighten-1 black-text">View Data</button>
+               <button class="btn button green lighten-1 black-text" @click="get_csv_data">View Data</button>
                <button class="btn button orange lighten-2 black-text" @click="getChartData">View Chart</button>
                <button class="btn button blue lighten-3 black-text">Update File</button>
-               <button class="btn button red lighten-2 black-text">Delete File</button>
+               <button class="btn button red lighten-2 black-text" @click="aboutToDelete = true">Delete File</button>
            </div>
        </div>
    </div>
@@ -31,16 +36,24 @@
     },
     data() {
       return {
-
+        aboutToDelete: false
       }
     },
     methods: {
       ...mapActions({
-        getChartDataAction: types.GET_SINGLE_DOCUMENT
+        getChartDataAction: types.GET_SINGLE_DOCUMENT,
+        deleteSingleFile: types.DELETE_DOCUMENT,
+        fetchCSVData: types.GET_CSV_DATA_ACTION
       }),
       getChartData() {
         console.log('Chart data called..');
         this.getChartDataAction(this.document_id);
+      },
+      delete_helper() {
+        this.deleteSingleFile(this.document_id);
+      },
+      get_csv_data() {
+        this.fetchCSVData(this.document_id);
       }
     },
   }
@@ -57,6 +70,9 @@
         button {
             margin: 0.5rem;
         }
+    }
+    p {
+        white-space: pre-line;
     }
 }
 </style>

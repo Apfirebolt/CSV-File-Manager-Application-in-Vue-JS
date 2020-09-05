@@ -14,7 +14,8 @@ const toastOptions = {
 const state = {
   user_documents: null,
   single_document: null,
-  current_graph_data: null
+  current_graph_data: null,
+  csv_data: null
 };
 
 const getters = {
@@ -26,6 +27,9 @@ const getters = {
   },
   [types.GET_GRAPH_DATA]: state => {
     return state.current_graph_data;
+  },
+  [types.GET_CSV_DATA]: state => {
+    return state.csv_data;
   },
 };
 
@@ -39,17 +43,20 @@ const mutations = {
   [types.SET_GRAPH_DATA]: (state, payload) => {
     state.current_graph_data = payload;
   },
+  [types.SET_CSV_DATA]: (state, payload) => {
+    state.csv_data = payload;
+  },
 };
 
 const actions = {
   // Action for saving document
 
-  [types.SAVE_DOCUMENT]: ({commit}, payload) => {
+  [types.SAVE_DOCUMENT]: ({commit, dispatch}, payload) => {
     let url = 'accounts/api/file_upload';
     authInstance.post(url, payload)
       .then((response) => {
-        console.log('Response now is ', response);
         Vue.toasted.show('Successfully uploaded a file!', toastOptions);
+        dispatch(types.GET_ALL_DOCUMENTS_ACTION);
       })
       .catch((err) => {
         console.error(err);
@@ -102,15 +109,31 @@ const actions = {
   },
   // Action for deleting single document
 
-  [types.DELETE_DOCUMENT]: ({commit}, document_id) => {
+  [types.DELETE_DOCUMENT]: ({commit, dispatch}, document_id) => {
     let url = 'accounts/api/delete_file/' + document_id;
     authInstance.delete(url)
       .then((response) => {
-        commit(types.SET_ALL_DOCUMENTS, response.data);
+        console.log('Delete success');
+        Vue.toasted.show('Successfully deleted the file!', toastOptions);
+        dispatch(types.GET_ALL_DOCUMENTS_ACTION);
       })
       .catch((err) => {
         console.error(err);
         Vue.toasted.show('Failed to delete single document data, some error occurred!', toastOptions);
+      });
+  },
+  // Get CSV data for a file
+
+  [types.GET_CSV_DATA_ACTION]: ({commit}, document_id) => {
+    let url = 'accounts/api/read_csv/' + document_id;
+    authInstance.get(url)
+      .then((response) => {
+        Vue.toasted.show('Successfully fetched CSV data for this file!', toastOptions);
+        commit(types.SET_CSV_DATA, response.data.data.slice(1));
+      })
+      .catch((err) => {
+        console.error(err);
+        Vue.toasted.show('Failed to fetch csv data for this document, some error occurred!', toastOptions);
       });
   },
 };

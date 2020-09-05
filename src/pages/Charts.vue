@@ -83,6 +83,9 @@
       DoughnutChartComponent,
       LineChartComponent,
       PolarAreaComponent
+    },
+    destroyed() {
+      console.log('Destroyed component');
     }
   }
 </script>

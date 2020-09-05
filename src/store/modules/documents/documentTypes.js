@@ -10,3 +10,7 @@ export const UPDATE_DOCUMENT = 'documents/UPDATE_DOCUMENT';
 export const DELETE_DOCUMENT = 'documents/DELETE_DOCUMENT';
 export const SET_GRAPH_DATA = 'documents/SET_GRAPH_DATA';
 export const GET_GRAPH_DATA = 'documents/GET_GRAPH_DATA';
+
+export const GET_CSV_DATA = 'documents/GET_CSV_DATA';
+export const SET_CSV_DATA = 'documents/SET_CSV_DATA';
+export const GET_CSV_DATA_ACTION = 'documents/GET_CSV_DATA_ACTION';

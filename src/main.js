@@ -7,6 +7,8 @@ import Toasted from 'vue-toasted';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import 'materialize-css/dist/css/materialize.min.css';
 import 'materialize-css/dist/js/materialize.min';
+import '@fortawesome/fontawesome-svg-core';
+import 'font-awesome/css/font-awesome.css';
 
 Vue.use(Loading);
 Vue.use(Toasted);

@@ -1,6 +1,6 @@
 <template>
-    <form class="col s12" method="post" enctype="multipart/form-data">
-        <div class="row white form_container">
+    <form class="s12 grey lighten-4 form_container" method="post" enctype="multipart/form-data">
+        <div class="row">
             <h4 class="center red-text accent-2">UPLOAD CSV DOCUMENT</h4>
             <div class="input-field col s6">
                 <label for="file_description">Please Enter File Description</label>
@@ -18,6 +18,7 @@
             <input type="submit" class="btn button teal" value="Upload Document"
                    @click.stop.prevent="upload_document">
             <p v-if="uploaded_file_required" class="red-text text-lighten-1">{{ uploaded_file_required }}</p>
+            <button class="teal btn accent-1 black-text" @click.stop.prevent="hideUploadBtn">Close</button>
         </div>
     </form>
 </template>
@@ -36,6 +37,12 @@
         },
         uploaded_file_required: ''
       }
+    },
+    props: {
+      hideUploadBtn: {
+        required: true,
+        type: Function
+      },
     },
     methods: {
       ...mapActions({
@@ -63,8 +70,9 @@
           const formData = new FormData();
           formData.append("file_description", this.file_description.text);
           formData.append("uploaded_file", this.uploaded_file);
-          // Call API here
+          // Call API and close Modal here
           this.uploadDocumentAction(formData);
+          this.hideUploadBtn();
         }
       },
       // Handles CSV File upload
@@ -85,5 +93,17 @@
     border: 2px solid black;
     padding: 1rem;
     margin: 1.5rem auto;
+}
+.form_container {
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1.5rem;
+
+    button {
+        margin: auto 1rem;
+    }
 }
 </style>
