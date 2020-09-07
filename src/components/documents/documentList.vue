@@ -1,9 +1,7 @@
 <template>
    <div class="row">
        <div class="col s12">
-           <p>
-               {{ document_description }}
-           </p>
+           <p class="teal-text">Description :- {{ document_description }}</p>
            <div v-if="aboutToDelete" class="confirm_delete container">
                Are You sure you want to delete this CSV file ?
                <button class="red btn button white-text" @click="delete_helper">Yes, Delete It</button>
@@ -51,12 +49,11 @@
       ...mapActions({
         getChartDataAction: types.GET_SINGLE_DOCUMENT,
         deleteSingleFile: types.DELETE_DOCUMENT,
-        fetchCSVData: types.GET_CSV_DATA_ACTION,
         updateDocumentAction: types.UPDATE_DOCUMENT,
+        fetchCSVData: types.GET_CSV_DATA_ACTION,
         documentData: types.GET_DOCUMENT_UPDATE_DATA_ACTION
       }),
       getChartData() {
-        console.log('Chart data called..');
         localStorage.setItem('current_item', this.document_id);
         this.getChartDataAction(this.document_id);
       },
@@ -64,7 +61,9 @@
         this.deleteSingleFile(this.document_id);
       },
       get_csv_data() {
-        this.fetchCSVData(this.document_id);
+        // Set the current id in the local storage
+        localStorage.setItem('csv_item', this.document_id);
+        this.$router.push({'name': 'table', params: {id: this.document_id }});
       },
       update_document_helper() {
         // Set the current document ID in the vuex store

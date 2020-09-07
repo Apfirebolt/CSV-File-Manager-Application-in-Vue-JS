@@ -55,7 +55,7 @@ const actions = {
         Vue.toasted.show('Successfully registered, please login to continue!', toastOptions );
       })
       .catch((err) => {
-        Vue.toasted.show(err.response.data.message, toastOptions );
+        Vue.toasted.show('Some error occurred during registration!', toastOptions);
       });
   },
 

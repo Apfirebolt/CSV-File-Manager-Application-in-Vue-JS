@@ -86,8 +86,6 @@
           console.log('Error', err);
         }
       }
-
-      console.log('Total Pages', this.totalPages);
     },
     destroyed() {
       try {

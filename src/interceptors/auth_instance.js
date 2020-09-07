@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000/'
+  baseURL: 'http://83.136.219.54:8010/'
 });
 
 let storedToken = localStorage.getItem('Token');
