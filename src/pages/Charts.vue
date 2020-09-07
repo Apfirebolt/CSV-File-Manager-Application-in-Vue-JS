@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <h4>CHARTS</h4>
-        <div class="container-fluid">
+        <div v-if="chartData" class="container-fluid">
             <div class="container">
                 <h5 class="center black-text">PIE CHART</h5>
                 <pie-chart-component
@@ -51,6 +51,9 @@
                 ></polar-area-component>
             </div>
         </div>
+        <div v-else>
+            <p>Loading...</p>
+        </div>
     </div>
 </template>
 
@@ -65,11 +68,39 @@
   import * as documentTypes from '../store/modules/documents/documentTypes';
   export default {
     name: 'dashboard_page',
-    mounted() {
+    data() {
+      return {
+        startIndex: 0,
+        endIndex: this.startIndex += 20,
+        totalPages: 1
+      }
     },
+    mounted() {
+      if(!this.chartData) {
+        try {
+          let document_id = localStorage.getItem('current_item');
+          this.getChartDataAction(document_id);
+          this.totalPages = Math.ceil(this.chartData.page_data.length / 20);
+        }
+        catch(err) {
+          console.log('Error', err);
+        }
+      }
 
+      console.log('Total Pages', this.totalPages);
+    },
+    destroyed() {
+      try {
+        localStorage.removeItem('current_item');
+      }
+      catch (err) {
+        console.log('Error');
+      }
+    },
     methods: {
-
+      ...mapActions({
+        getChartDataAction: documentTypes.GET_SINGLE_DOCUMENT
+      })
     },
     computed: {
       ...mapGetters({
@@ -84,9 +115,6 @@
       LineChartComponent,
       PolarAreaComponent
     },
-    destroyed() {
-      console.log('Destroyed component');
-    }
   }
 </script>
 

@@ -1,7 +1,14 @@
 <template>
     <form class="s12 grey lighten-4 form_container" method="post" enctype="multipart/form-data">
+        <p>{{ currentDocumentData }}</p>
         <div class="row">
-            <h4 class="center red-text accent-2">UPLOAD CSV DOCUMENT</h4>
+            <h4 class="center red-text accent-2">{{ isUpdateMode ? 'UPDATE FILE' : 'UPLOAD CSV DOCUMENT' }}</h4>
+            <div v-if="isUpdateMode" class="row">
+                <div class="input-field col s12">
+                    <input disabled id="disabled" type="text" class="validate">
+                    <label for="disabled">{{ currentDocumentData.uploaded_file }}</label>
+                </div>
+            </div>
             <div class="input-field col s6">
                 <label for="file_description">Please Enter File Description</label>
                 <textarea id="file_description" name="file_description" type="text" class="validate materialize-textarea"
@@ -15,7 +22,7 @@
                        @change="handleFileChange($event)"/>
             </div>
 
-            <input type="submit" class="btn button teal" value="Upload Document"
+            <input type="submit" class="btn button teal" :value="isUpdateMode ? 'Update Document' : 'Upload Document'"
                    @click.stop.prevent="upload_document">
             <p v-if="uploaded_file_required" class="red-text text-lighten-1">{{ uploaded_file_required }}</p>
             <button class="teal btn accent-1 black-text" @click.stop.prevent="hideUploadBtn">Close</button>
@@ -43,10 +50,15 @@
         required: true,
         type: Function
       },
+      isUpdateMode: {
+        required: true,
+        type: Boolean
+      }
     },
     methods: {
       ...mapActions({
-        uploadDocumentAction: types.SAVE_DOCUMENT
+        uploadDocumentAction: types.SAVE_DOCUMENT,
+        updateDocumentAction: types.UPDATE_DOCUMENT
       }),
       upload_document() {
         let hasErrors = false;
@@ -66,13 +78,36 @@
           this.uploaded_file_required = '';
         }
 
-        if(!hasErrors) {
-          const formData = new FormData();
-          formData.append("file_description", this.file_description.text);
-          formData.append("uploaded_file", this.uploaded_file);
-          // Call API and close Modal here
-          this.uploadDocumentAction(formData);
-          this.hideUploadBtn();
+        // When we are updating the data
+        if(this.isUpdateMode) {
+          if(!this.file_description.text) {
+            this.file_description.errorText = 'File description would be used for searching files, cannot leave it blank.';
+          } else {
+            // Call update function with formData
+            const formData = new FormData();
+            formData.append("file_description", this.file_description.text);
+            if(this.uploaded_file) {
+              formData.append("uploaded_file", this.uploaded_file);
+            }
+            // Call API for update and close Modal here
+            let payload = {
+              document_id: this.currentDocumentData.id,
+              data: formData
+            }
+            this.updateDocumentAction(payload);
+            this.hideUploadBtn();
+          }
+        }
+        // Upload file Mode
+        else {
+          if(!hasErrors) {
+            const formData = new FormData();
+            formData.append("file_description", this.file_description.text);
+            formData.append("uploaded_file", this.uploaded_file);
+            // Call API and close Modal here
+            this.uploadDocumentAction(formData);
+            this.hideUploadBtn();
+          }
         }
       },
       // Handles CSV File upload
@@ -82,7 +117,24 @@
     },
     computed: {
       ...mapGetters({
+        currentDocumentId: types.GET_CURRENT_DOCUMENT_ID,
+        currentDocumentData: types.GET_DOCUMENT_UPDATE_DATA
       }),
+    },
+    mounted() {
+      if(this.isUpdateMode && this.currentDocumentData) {
+        this.file_description.text = this.currentDocumentData.file_description;
+      }
+    },
+    destroyed() {
+      // Reset the data if update mode
+      this.$store.state.documents.document_update_data = null;
+    },
+    // Track changes in the data from the API
+    watch: {
+      currentDocumentData: function (value) {
+        this.file_description.text = value.file_description;
+      },
     }
   }
 </script>

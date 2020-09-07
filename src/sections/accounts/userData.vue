@@ -1,7 +1,10 @@
 <template>
     <div class="row">
         <transition name="custom-slide" mode="out-in">
-            <upload-document-component v-if="showUpload" :hideUploadBtn="hide_upload_btn"></upload-document-component>
+            <upload-document-component v-if="showUpload"
+                                       :hideUploadBtn="hide_upload_btn"
+                                       :isUpdateMode="isUpdateMode"
+            ></upload-document-component>
         </transition>
 
         <div class="col s12 m7">
@@ -43,6 +46,8 @@
                 <document-list-component v-for="(each_data, index) in filteredDocumentData" :key="index" class="col s12 m-1"
                                          :document_id="each_data.id"
                                          :document_description="each_data.file_description"
+                                         :showUpload="show_upload_btn"
+                                         :updateMode="update_mode_function"
                 >
                 </document-list-component>
             </transition-group>
@@ -65,7 +70,8 @@
       return {
         showUpload: false,
         viewTable: true,
-        document_description_text: ''
+        document_description_text: '',
+        isUpdateMode: false
       }
     },
     props: {
@@ -81,12 +87,17 @@
     methods: {
       show_upload_btn() {
         this.showUpload = true;
+        this.isUpdateMode = false;
       },
       hide_upload_btn() {
         this.showUpload = false;
       },
       hideTable() {
         this.viewTable = false;
+      },
+      update_mode_function() {
+        this.isUpdateMode = true;
+        this.showUpload = true;
       }
     },
     computed: {

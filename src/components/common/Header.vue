@@ -1,6 +1,5 @@
 <template>
     <nav>
-        {{ isAuthenticated }}
         <div class="left">
             <h5 class="darken_text">CSV Manager</h5>
         </div>
@@ -12,6 +11,11 @@
                         @click.native="logOutUser"
                 >Log Out
                 </router-link>
+                <router-link v-if="isAuthenticated"
+                             tag="li"
+                             :to="{ name: 'dashboard', }"
+                >Dashboard
+                </router-link>
                 <router-link v-else
                         tag="li"
                         :to="{ name: 'accounts', }"
@@ -22,6 +26,9 @@
                         :to="{ name: 'home', }"
                         >About
                 </router-link>
+                <div>
+                    <i class="fa fa-bars"></i>
+                </div>
             </ul>
         </div>
     </nav>
@@ -73,6 +80,13 @@ nav {
 
         ul {
             li {
+                display: none;
+                @include largeScreens {
+                    display: block;
+                }
+                @include tabScreens {
+                    display: block;
+                }
                 margin: auto 1rem;
                 cursor: pointer;
                 &:hover {
@@ -85,6 +99,20 @@ nav {
 
         @include largeScreens {
             width: 50%;
+        }
+        .fa-bars {
+            @include largeScreens {
+                display: none;
+            }
+            @include tabScreens {
+                display: none;
+            }
+            @include smallScreens {
+                display: none;
+            }
+            @include verySmallScreens {
+                display: block;
+            }
         }
     }
 }

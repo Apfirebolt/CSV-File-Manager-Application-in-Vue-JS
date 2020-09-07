@@ -14,3 +14,8 @@ export const GET_GRAPH_DATA = 'documents/GET_GRAPH_DATA';
 export const GET_CSV_DATA = 'documents/GET_CSV_DATA';
 export const SET_CSV_DATA = 'documents/SET_CSV_DATA';
 export const GET_CSV_DATA_ACTION = 'documents/GET_CSV_DATA_ACTION';
+
+export const GET_CURRENT_DOCUMENT_ID = 'documents/GET_CURRENT_DOCUMENT_ID';
+export const SET_DOCUMENT_UPDATE_DATA = 'documents/SET_DOCUMENT_UPDATE_DATA';
+export const GET_DOCUMENT_UPDATE_DATA = 'documents/GET_DOCUMENT_UPDATE_DATA';
+export const GET_DOCUMENT_UPDATE_DATA_ACTION = 'documents/GET_DOCUMENT_UPDATE_DATA_ACTION';

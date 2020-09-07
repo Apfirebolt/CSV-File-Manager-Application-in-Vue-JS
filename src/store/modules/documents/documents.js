@@ -15,7 +15,8 @@ const state = {
   user_documents: null,
   single_document: null,
   current_graph_data: null,
-  csv_data: null
+  csv_data: null,
+  document_update_data: null,
 };
 
 const getters = {
@@ -30,6 +31,9 @@ const getters = {
   },
   [types.GET_CSV_DATA]: state => {
     return state.csv_data;
+  },
+  [types.GET_DOCUMENT_UPDATE_DATA]: state => {
+    return state.document_update_data;
   },
 };
 
@@ -46,6 +50,9 @@ const mutations = {
   [types.SET_CSV_DATA]: (state, payload) => {
     state.csv_data = payload;
   },
+  [types.SET_DOCUMENT_UPDATE_DATA]: (state, payload) => {
+    state.document_update_data = payload;
+  },
 };
 
 const actions = {
@@ -59,8 +66,9 @@ const actions = {
         dispatch(types.GET_ALL_DOCUMENTS_ACTION);
       })
       .catch((err) => {
-        console.error(err);
-        Vue.toasted.show('Failed to fetch user profile data, some error occurred!', toastOptions);
+        Object.values(err.response.data.errors).map((item, index) => {
+          Vue.toasted.show(item[0], toastOptions);
+        });
       });
   },
 
@@ -70,7 +78,6 @@ const actions = {
     let url = 'accounts/api/documents';
     authInstance.get(url)
       .then((response) => {
-      console.log('All document data : ', response.data);
         commit(types.SET_ALL_DOCUMENTS, response.data);
       })
       .catch((err) => {
@@ -96,15 +103,17 @@ const actions = {
   },
   // Action for updating single document
 
-  [types.UPDATE_DOCUMENT]: ({commit}, payload) => {
+  [types.UPDATE_DOCUMENT]: ({commit, dispatch}, payload) => {
     let url = 'accounts/api/update_file/' + payload.document_id;
-    authInstance.put(url)
+    authInstance.put(url, payload.data)
       .then((response) => {
-        commit(types.SET_ALL_DOCUMENTS, response.data);
+        Vue.toasted.show('Successfully updated the file!', toastOptions);
+        dispatch(types.GET_ALL_DOCUMENTS_ACTION);
       })
       .catch((err) => {
-        console.error(err);
-        Vue.toasted.show('Failed to update single document data, some error occurred!', toastOptions);
+        Object.values(err.response.data.errors).map((item, index) => {
+          Vue.toasted.show(item[0], toastOptions);
+        });
       });
   },
   // Action for deleting single document
@@ -133,6 +142,19 @@ const actions = {
       })
       .catch((err) => {
         console.error(err);
+        Vue.toasted.show('Failed to fetch csv data for this document, some error occurred!', toastOptions);
+      });
+  },
+  // Get existing data for single document before update GET_DOCUMENT_UPDATE_DATA
+  [types.GET_DOCUMENT_UPDATE_DATA_ACTION]: ({commit}, document_id) => {
+    let url = 'accounts/api/detail_file/' + document_id;
+    authInstance.get(url)
+      .then((response) => {
+        Vue.toasted.show('Successfully fetched data for this file!', toastOptions);
+        commit(types.SET_DOCUMENT_UPDATE_DATA, response.data);
+      })
+      .catch((err) => {
+        console.log('Error is now',err);
         Vue.toasted.show('Failed to fetch csv data for this document, some error occurred!', toastOptions);
       });
   },

@@ -55,7 +55,7 @@ export default new Router({
           }
           else {
             next({
-              name: "charts" // Redirect user back to the accounts page.
+              name: "accounts" // Redirect user back to the accounts page.
             });
           }
         }

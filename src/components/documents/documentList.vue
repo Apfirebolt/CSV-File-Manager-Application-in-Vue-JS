@@ -12,7 +12,7 @@
            <div class="container">
                <button class="btn button green lighten-1 black-text" @click="get_csv_data">View Data</button>
                <button class="btn button orange lighten-2 black-text" @click="getChartData">View Chart</button>
-               <button class="btn button blue lighten-3 black-text">Update File</button>
+               <button class="btn button blue lighten-3 black-text" @click="update_document_helper">Update File</button>
                <button class="btn button red lighten-2 black-text" @click="aboutToDelete = true">Delete File</button>
            </div>
        </div>
@@ -32,6 +32,14 @@
       document_description: {
         required: true,
         type: String
+      },
+      showUpload: {
+        required: true,
+        type: Function
+      },
+      updateMode: {
+        required: true,
+        type: Function
       }
     },
     data() {
@@ -43,10 +51,13 @@
       ...mapActions({
         getChartDataAction: types.GET_SINGLE_DOCUMENT,
         deleteSingleFile: types.DELETE_DOCUMENT,
-        fetchCSVData: types.GET_CSV_DATA_ACTION
+        fetchCSVData: types.GET_CSV_DATA_ACTION,
+        updateDocumentAction: types.UPDATE_DOCUMENT,
+        documentData: types.GET_DOCUMENT_UPDATE_DATA_ACTION
       }),
       getChartData() {
         console.log('Chart data called..');
+        localStorage.setItem('current_item', this.document_id);
         this.getChartDataAction(this.document_id);
       },
       delete_helper() {
@@ -54,6 +65,12 @@
       },
       get_csv_data() {
         this.fetchCSVData(this.document_id);
+      },
+      update_document_helper() {
+        // Set the current document ID in the vuex store
+        this.$store.state.documents.update_document_id = this.document_id;
+        this.documentData(this.document_id);
+        this.updateMode();
       }
     },
   }
