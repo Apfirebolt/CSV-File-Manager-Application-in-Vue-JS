@@ -27,7 +27,7 @@
                         >About
                 </router-link>
                 <div>
-                    <i class="fa fa-bars"></i>
+                    <i class="fa fa-bars" @click="toggleSidebar"></i>
                 </div>
             </ul>
         </div>
@@ -39,6 +39,12 @@
   import * as types from '../../store/modules/accounts/accountTypes';
   export default {
     name: 'header_component',
+    props: {
+      toggleSidebar: {
+        required: true,
+        type: Function
+      }
+    },
     methods: {
       ...mapActions({
         logOutUser: types.LOG_OUT
@@ -101,6 +107,11 @@ nav {
             width: 50%;
         }
         .fa-bars {
+            height: 20px;
+            margin: auto 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+
             @include largeScreens {
                 display: none;
             }

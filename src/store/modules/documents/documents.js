@@ -122,7 +122,6 @@ const actions = {
     let url = 'accounts/api/delete_file/' + document_id;
     authInstance.delete(url)
       .then((response) => {
-        console.log('Delete success');
         Vue.toasted.show('Successfully deleted the file!', toastOptions);
         dispatch(types.GET_ALL_DOCUMENTS_ACTION);
       })

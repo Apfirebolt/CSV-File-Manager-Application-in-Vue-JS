@@ -1,12 +1,11 @@
 <template>
     <form class="s12 grey lighten-4 form_container" method="post" enctype="multipart/form-data">
-        <p>{{ currentDocumentData }}</p>
         <div class="row">
             <h4 class="center red-text accent-2">{{ isUpdateMode ? 'UPDATE FILE' : 'UPLOAD CSV DOCUMENT' }}</h4>
             <div v-if="isUpdateMode" class="row">
                 <div class="input-field col s12">
                     <input disabled id="disabled" type="text" class="validate">
-                    <label for="disabled">{{ currentDocumentData.uploaded_file }}</label>
+                    <label for="disabled">{{ currentDocumentData && currentDocumentData.uploaded_file }}</label>
                 </div>
             </div>
             <div class="input-field col s6">
